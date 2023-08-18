@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+   
+ <mapper namespace="kr.co.jhta.soop.dao.ProjectInvitationDAO">
+  	
+  	<select id="selectOne" parameterType="int" resultType="ProjectInvitationDTO">
+ 		SELECT invitation_no, project_no, invitation_email, invitation_code, invitation_success
+ 		FROM project_invitation
+ 		WHERE invitation_no = #{invitation_no}
+ 	</select>
+ 	
+ 	<!-- 초대코드링크 인증완료되면 링크에 있는 KEY와 동일한 KEY값으로 초대정보 가져오기 -->
+	<select id="findByKey" parameterType="String" resultType="ProjectInvitationDTO">
+		SELECT invitation_code, invitation_email, project_no
+		FROM project_invitation
+		WHERE invitation_code = #{invitation_code}
+	</select>
+	<insert id="insertOne" parameterType="ProjectInvitationDTO">
+		INSERT INTO project_invitation (project_no, invitation_email, invitation_code, invitation_success)
+		VALUES(#{project_no},#{invitation_email},#{invitation_code}, 1)
+	</insert>
+	<update id="updateOne" parameterType="ProjectInvitationDTO">
+		UPDATE project_invitation
+		SET invitation_success = #{invitation_success}
+		WHERE invitation_no = #{invitation_no}
+	</update>
+	<!-- 초대코드 인증 후 성공상태로 변경 -->
+	<update id="updateSuccess" parameterType="String">
+		UPDATE project_invitation
+		SET invitation_success = 0
+		WHERE invitation_code = #{invitation_code}
+	</update>
+	
+	
+  <!-- 회원가입시 초대 테이블에 초대받은 이메일이 있으면 프로젝트 멤버 테이블에 데이터를 넣기 위한   -->
+  <select id="selectOneByEmail" resultType="ProjectInvitationDTO" parameterType="String">
+  
+  SELECT * 
+  FROM project_invitation
+  WHERE invitation_email = #{invitation_email}
+  
+  </select>
+ </mapper>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  
+  <mapper namespace="kr.co.jhta.soop.dao.ProjectTaskMemberDAO">
+  
+	<!-- 내가 참여한 프로젝트 가져오기 -->  
+  	<select id="myproject_Select_task" resultType="kr.co.jhta.soop.dto.ProjectTaskMemberDTO" parameterType="int">
+		<!-- SELECT p.project_no, p.project_title, t.project_no, t.task_no, t.member_no, t.task_title, t.task_status,m.member_no,m.name -->  
+		SELECT 
+    m.email,m.password,m.profile_name,m.profile_path,m.member_no,  -- 회원 정보
+    pm.project_no,  -- 프로젝트 번호
+    p.project_title,  -- 프로젝트 제목
+    t.task_no,  -- 작업 번호
+    t.task_title,  -- 작업 제목
+    t.task_register_date,  -- 작업 등록일
+    t.task_content,  -- 작업 내용
+    t.task_status,  -- 작업 상태
+    t.task_start_date,  -- 작업 시작일
+    t.task_end_date,  -- 작업 종료일
+    creator.name AS name  -- 작업 생성자의 이름
+FROM 
+    member m
+LEFT JOIN 
+    project_member pm ON m.member_no = pm.member_no
+LEFT JOIN 
+    project p ON pm.project_no = p.project_no
+LEFT JOIN 
+    task t ON p.project_no = t.project_no
+LEFT JOIN 
+    member creator ON t.member_no = creator.member_no -- 작업 생성자의 이름을 위한 조인
+WHERE 
+    m.member_no = #{m.member_no}
+    AND t.task_title != ''
+    AND t.task_content != '';
+  	</select>
+  	
+  	<!-- 프로젝트별로 업무 가져오기  dto에 project_member 추가함(test)-->
+  	<select id="TasksByProject" resultType="kr.co.jhta.soop.dto.ProjectTaskMemberDTO" parameterType="int">
+		<!-- SELECT p.project_title -->
+		SELECT *
+		FROM member m
+		JOIN project_member pm
+		ON m.member_no = pm.member_no
+		JOIN project p
+		ON pm.project_no = p.project_no
+		WHERE m.member_no = #{m.member_no}
+        AND p.project_title != ""
+        AND p.project_title is not null;	
+  	</select>
+  	
+  	<!-- checkbox에서 프로젝트 선택시 프로젝트에 있는 업무 보여주기 --> 
+	<select id="getTasksByProject" resultType="kr.co.jhta.soop.dto.ProjectTaskMemberDTO" parameterType="java.util.Map">
+	    <!-- SELECT t.task_no, t.task_title, t.task_content, m.member_no, p.project_no, p.project_title  -->
+	   <!--  SELECT *
+	    FROM task t
+	    JOIN member m 
+        ON t.member_no = m.member_no
+	    JOIN project p 
+        ON t.project_no = p.project_no
+	    WHERE p.project_title LIKE #{project_title}
+	    AND t.task_title != ''
+	    AND t.task_content != ''
+        and t.member_no = #{member_no}
+        and t.project_no = #{project_no} -->
+        
+       SELECT 
+    m.email,m.password,m.profile_name,m.profile_path,m.member_no,  -- 회원 정보
+    pm.project_no,  -- 프로젝트 번호
+    p.project_title,  -- 프로젝트 제목
+    t.task_no,  -- 작업 번호
+    t.task_title,  -- 작업 제목
+    t.task_register_date,  -- 작업 등록일
+    t.task_content,  -- 작업 내용
+    t.task_status,  -- 작업 상태
+    t.task_start_date,  -- 작업 시작일
+    t.task_end_date,  -- 작업 종료일
+    creator.name AS name  -- 작업 생성자의 이름
+FROM 
+    member m
+LEFT JOIN 
+    project_member pm ON m.member_no = pm.member_no
+LEFT JOIN 
+    project p ON pm.project_no = p.project_no
+LEFT JOIN 
+    task t ON p.project_no = t.project_no
+LEFT JOIN 
+    member creator ON t.member_no = creator.member_no -- 작업 생성자의 이름을 위한 조인
+WHERE p.project_title LIKE #{project_title}
+    AND m.member_no = #{member_no}
+    AND t.project_no = #{project_no}
+    AND t.task_title != ''
+    AND t.task_content != ''
+ORDER BY 
+    t.task_register_date DESC
+        
+
+	</select>
+	
+ 	 
+  	<!-- 드래그앤 드랍으로 업무상태값 변경시 업데이트  --> 	
+  	<update id="myprojectUpdateTaskStatus" parameterType="kr.co.jhta.soop.dto.ProjectTaskMemberDTO">
+  		UPDATE task t
+  		JOIN member m
+  		ON t.member_no = m.member_no
+  		SET t.task_status = #{task_status}
+  		WHERE m.member_no = #{member_no}
+  		AND t.task_no = #{task_no}  	
+  	</update>
+  </mapper>

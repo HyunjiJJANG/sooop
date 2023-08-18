@@ -1,0 +1,7 @@
+* branch 추가
+
+- team > switch to > other
+  > remote에서 가져오려는 브랜치 선택 > new branch 버튼 > finish
+
+* merge
+merge > remote나 local 상관 없음 똑같으면 아무거나 (나는 학원에서 remote로 함) 

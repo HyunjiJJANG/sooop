@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.jhta.soop.dao.ScheduleDAO">
+
+ 
+
+	<select id="selectAll" parameterType="int" resultType="kr.co.jhta.soop.dto.ScheduleDTO">
+		SELECT schedule_no, member_no, schedule_title, schedule_start_date, schedule_end_date
+		FROM schedule
+		WHERE member_no = #{member_no}
+	</select>
+	<select id="selectOne" parameterType="int" resultType="kr.co.jhta.soop.dto.ScheduleDTO">
+		SELECT schedule_no, member_no, schedule_title, schedule_start_date, schedule_end_date
+		FROM schedule
+		WHERE schedule_no = #{schedule_no}
+	</select>	
+	<insert id="insertOne" parameterType="kr.co.jhta.soop.dto.ScheduleDTO">
+	 	INSERT INTO schedule
+	 	VALUES (#{schedule_no}, #{member_no}, #{schedule_title}, #{schedule_start_date}, #{schedule_end_date})
+	</insert>
+	<delete id="deleteOne" parameterType="int">
+		DELETE FROM schedule
+		WHERE schedule_no = #{schedule_no}
+	</delete>
+</mapper>

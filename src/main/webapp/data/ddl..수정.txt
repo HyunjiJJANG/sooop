@@ -1,0 +1,547 @@
+C:\Users\jhta>sqlplus system/oracle
+
+SQL> create user happy1
+  2  identified by jhta1;
+
+SQL> grant connect, resource to happy1;
+
+SQL> conn happy1/jhta1;
+
+/* 회원 */
+CREATE TABLE member (
+	mno NUMBER(5) NOT NULL, /* 회원번호 */
+	mtype NUMBER(1), /* 회원분류 */
+	id VARCHAR2(20), /* 아이디 */
+	pw VARCHAR2(20), /* 패스워드 */
+	name VARCHAR2(20), /* 이름 */
+	email VARCHAR2(30) /* 이메일 */
+);
+
+COMMENT ON TABLE member IS '회원';
+
+COMMENT ON COLUMN member.mno IS '회원번호';
+
+COMMENT ON COLUMN member.mtype IS '회원분류';
+
+COMMENT ON COLUMN member.id IS '아이디';
+
+COMMENT ON COLUMN member.pw IS '패스워드';
+
+COMMENT ON COLUMN member.name IS '이름';
+
+COMMENT ON COLUMN member.email IS '이메일';
+
+ALTER TABLE member
+	ADD
+		CONSTRAINT PK_member
+		PRIMARY KEY (
+			mno
+		);
+
+/* 클래스 */
+CREATE TABLE course (
+	cno NUMBER(5) NOT NULL, /* 클래스번호 */
+	cstatus NUMBER(1), /* 모집상태 */
+	cwritedate DATE, /* 작성일시 */
+	ctitle VARCHAR2(50), /* 클래스제목 */
+	cpurpose VARCHAR2(10), /* 클래스목적 */
+	ctype VARCHAR2(10), /* 클래스방식(대면/비대면) */
+	cloc VARCHAR2(20), /* 새 컬럼 */
+	cnumberofpeople NUMBER(1), /* 클래스인원 */
+	cschedule VARCHAR2(20), /* 클래스일정 */
+	cintroduce CLOB, /* 클래스상세소개 */
+	cimage BLOB, /* 클래스소개이미지 */
+	cfee NUMBER(7), /* 회당수강료 */
+	ccount NUMBER(2), /* 클래스횟수 */
+	mno NUMBER(5) /* 회원번호 */
+);
+
+COMMENT ON TABLE course IS '클래스';
+
+COMMENT ON COLUMN course.cno IS '클래스번호';
+
+COMMENT ON COLUMN course.cstatus IS '모집상태';
+
+COMMENT ON COLUMN course.cwritedate IS '작성일시';
+
+COMMENT ON COLUMN course.ctitle IS '클래스제목';
+
+COMMENT ON COLUMN course.cpurpose IS '클래스목적';
+
+COMMENT ON COLUMN course.ctype IS '클래스방식(대면/비대면)';
+
+COMMENT ON COLUMN course.cloc IS '새 컬럼';
+
+COMMENT ON COLUMN course.cnumberofpeople IS '클래스인원';
+
+COMMENT ON COLUMN course.cschedule IS '클래스일정';
+
+COMMENT ON COLUMN course.cintroduce IS '클래스상세소개';
+
+COMMENT ON COLUMN course.cimage IS '클래스소개이미지';
+
+COMMENT ON COLUMN course.cfee IS '회당수강료';
+
+COMMENT ON COLUMN course.ccount IS '클래스횟수';
+
+COMMENT ON COLUMN course.mno IS '회원번호';
+
+ALTER TABLE course
+	ADD
+		CONSTRAINT PK_course
+		PRIMARY KEY (
+			cno
+		);
+
+/* 찜 */
+CREATE TABLE jjim (
+	jno NUMBER(5) NOT NULL, /* 찜번호 */
+	mno NUMBER(5), /* 회원번호 */
+	cno NUMBER(5) /* 클래스번호 */
+);
+
+COMMENT ON TABLE jjim IS '찜';
+
+COMMENT ON COLUMN jjim.jno IS '찜번호';
+
+COMMENT ON COLUMN jjim.mno IS '회원번호';
+
+COMMENT ON COLUMN jjim.cno IS '클래스번호';
+
+ALTER TABLE jjim
+	ADD
+		CONSTRAINT PK_jjim
+		PRIMARY KEY (
+			jno
+		);
+
+/* 리뷰 */
+CREATE TABLE review (
+	revno NUMBER(5) NOT NULL, /* 리뷰번호 */
+	mno NUMBER(5), /* 회원번호 */
+	cno NUMBER(5), /* 클래스번호 */
+	revtitle VARCHAR2(50), /* 리뷰제목 */
+	revcontent CLOB, /* 리뷰내용 */
+	revwdate DATE, /* 리뷰작성일시 */
+	rating NUMBER(1) /* 평점 */
+);
+
+COMMENT ON TABLE review IS '리뷰';
+
+COMMENT ON COLUMN review.revno IS '리뷰번호';
+
+COMMENT ON COLUMN review.mno IS '회원번호';
+
+COMMENT ON COLUMN review.cno IS '클래스번호';
+
+COMMENT ON COLUMN review.revtitle IS '리뷰제목';
+
+COMMENT ON COLUMN review.revcontent IS '리뷰내용';
+
+COMMENT ON COLUMN review.revwdate IS '리뷰작성일시';
+
+COMMENT ON COLUMN review.rating IS '평점';
+
+ALTER TABLE review
+	ADD
+		CONSTRAINT PK_review
+		PRIMARY KEY (
+			revno
+		);
+
+/* 문의 */
+CREATE TABLE question (
+	qno NUMBER(5) NOT NULL, /* 문의번호 */
+	mno NUMBER(5), /* 회원번호 */
+	cno NUMBER(5), /* 클래스번호 */
+	qcontent CLOB, /* 문의내용 */
+	qwdate DATE, /* 문의작성일시 */
+	qstatus NUMBER(1) /* 답변상태 */
+);
+
+COMMENT ON TABLE question IS '문의';
+
+COMMENT ON COLUMN question.qno IS '문의번호';
+
+COMMENT ON COLUMN question.mno IS '회원번호';
+
+COMMENT ON COLUMN question.cno IS '클래스번호';
+
+COMMENT ON COLUMN question.qcontent IS '문의내용';
+
+COMMENT ON COLUMN question.qwdate IS '문의작성일시';
+
+COMMENT ON COLUMN question.qstatus IS '답변상태';
+
+ALTER TABLE question
+	ADD
+		CONSTRAINT PK_question
+		PRIMARY KEY (
+			qno
+		);
+
+/* 튜터 회원 추가 정보 */
+CREATE TABLE infoadd (
+	mno NUMBER(5) NOT NULL, /* 회원번호 */
+	replang VARCHAR2(10), /* 대표외국어 */
+	picture BLOB, /* 사진 */
+	age VARCHAR2(5), /* 연령대 */
+	gender VARCHAR2(6), /* 성별 */
+	finaldegree VARCHAR2(10), /* 최종학력 */
+	schoolname VARCHAR2(20), /* 학교명 */
+	overseasexp VARCHAR2(10), /* 해외거주경험 */
+	tutorintroduce CLOB, /* 자기소개 */
+	bankaccount VARCHAR2(20) /* 계좌번호 */
+);
+
+COMMENT ON TABLE infoadd IS '튜터 회원 추가 정보';
+
+COMMENT ON COLUMN infoadd.mno IS '회원번호';
+
+COMMENT ON COLUMN infoadd.replang IS '대표외국어';
+
+COMMENT ON COLUMN infoadd.picture IS '사진';
+
+COMMENT ON COLUMN infoadd.age IS '연령대';
+
+COMMENT ON COLUMN infoadd.gender IS '성별';
+
+COMMENT ON COLUMN infoadd.finaldegree IS '최종학력';
+
+COMMENT ON COLUMN infoadd.schoolname IS '학교명';
+
+COMMENT ON COLUMN infoadd.overseasexp IS '해외거주경험';
+
+COMMENT ON COLUMN infoadd.tutorintroduce IS '자기소개';
+
+COMMENT ON COLUMN infoadd.bankaccount IS '계좌번호';
+
+ALTER TABLE infoadd
+	ADD
+		CONSTRAINT PK_infoadd
+		PRIMARY KEY (
+			mno
+		);
+
+/* 관심외국어 */
+CREATE TABLE linterested (
+	lino NUMBER(5) NOT NULL, /* 관심외국어번호 */
+	mno NUMBER(5), /* 회원번호 */
+	lcode NUMBER(2) /* 외국어코드 */
+);
+
+COMMENT ON TABLE linterested IS '관심외국어';
+
+COMMENT ON COLUMN linterested.lino IS '관심외국어번호';
+
+COMMENT ON COLUMN linterested.mno IS '회원번호';
+
+COMMENT ON COLUMN linterested.lcode IS '외국어코드';
+
+ALTER TABLE linterested
+	ADD
+		CONSTRAINT PK_linterested
+		PRIMARY KEY (
+			lino
+		);
+
+/* 활용 가능 외국어 */
+CREATE TABLE lavailable (
+	lano NUMBER(5) NOT NULL, /* 활용가능외국어번호 */
+	mno NUMBER(5), /* 회원번호 */
+	lcode NUMBER(2) /* 외국어코드 */
+);
+
+COMMENT ON TABLE lavailable IS '활용 가능 외국어';
+
+COMMENT ON COLUMN lavailable.lano IS '활용가능외국어번호';
+
+COMMENT ON COLUMN lavailable.mno IS '회원번호';
+
+COMMENT ON COLUMN lavailable.lcode IS '외국어코드';
+
+ALTER TABLE lavailable
+	ADD
+		CONSTRAINT PK_lavailable
+		PRIMARY KEY (
+			lano
+		);
+
+/* 공인외국어시험성적 */
+CREATE TABLE langtest (
+	ltno NUMBER(5) NOT NULL, /* 공인외국어시험성적번호 */
+	mno NUMBER(5), /* 회원번호 */
+	testname VARCHAR2(20), /* 시험명 */
+	score VARCHAR2(10), /* 점수/등급 */
+	expirationdate DATE, /* 유효기간 */
+	authno VARCHAR2(20) /* 발급번호 */
+);
+
+COMMENT ON TABLE langtest IS '공인외국어시험성적';
+
+COMMENT ON COLUMN langtest.ltno IS '공인외국어시험성적번호';
+
+COMMENT ON COLUMN langtest.mno IS '회원번호';
+
+COMMENT ON COLUMN langtest.testname IS '시험명';
+
+COMMENT ON COLUMN langtest.score IS '점수/등급';
+
+COMMENT ON COLUMN langtest.expirationdate IS '유효기간';
+
+COMMENT ON COLUMN langtest.authno IS '발급번호';
+
+ALTER TABLE langtest
+	ADD
+		CONSTRAINT PK_langtest
+		PRIMARY KEY (
+			ltno
+		);
+
+/* 결제 */
+CREATE TABLE payment (
+	pno NUMBER(5) NOT NULL, /* 결제번호 */
+	mno NUMBER(5), /* 회원번호 */
+	cno NUMBER(5), /* 클래스번호 */
+	orderno VARCHAR2(30), /* 주문번호 */
+	price NUMBER(7), /* 결제금액 */
+	pauthno VARCHAR2(30) /* 결제승인번호 */
+);
+
+COMMENT ON TABLE payment IS '결제';
+
+COMMENT ON COLUMN payment.pno IS '결제번호';
+
+COMMENT ON COLUMN payment.mno IS '회원번호';
+
+COMMENT ON COLUMN payment.cno IS '클래스번호';
+
+COMMENT ON COLUMN payment.orderno IS '주문번호';
+
+COMMENT ON COLUMN payment.price IS '결제금액';
+
+COMMENT ON COLUMN payment.pauthno IS '결제승인번호';
+
+ALTER TABLE payment
+	ADD
+		CONSTRAINT PK_payment
+		PRIMARY KEY (
+			pno
+		);
+
+/* 답변 */
+CREATE TABLE answer (
+	ano NUMBER(5) NOT NULL, /* 답변번호 */
+	mno NUMBER(5), /* 회원번호 */
+	qno NUMBER(5), /* 문의번호 */
+	acontent CLOB, /* 답변내용 */
+	awdate DATE /* 답변작성일시 */
+);
+
+COMMENT ON TABLE answer IS '답변';
+
+COMMENT ON COLUMN answer.ano IS '답변번호';
+
+COMMENT ON COLUMN answer.mno IS '회원번호';
+
+COMMENT ON COLUMN answer.qno IS '문의번호';
+
+COMMENT ON COLUMN answer.acontent IS '답변내용';
+
+COMMENT ON COLUMN answer.awdate IS '답변작성일시';
+
+ALTER TABLE answer
+	ADD
+		CONSTRAINT PK_answer
+		PRIMARY KEY (
+			ano
+		);
+
+/* 외국어 카테고리 */
+CREATE TABLE lcategory (
+	lcode NUMBER(2) NOT NULL, /* 외국어코드 */
+	langname VARCHAR2(10) /* 외국어이름 */
+);
+
+COMMENT ON TABLE lcategory IS '외국어 카테고리';
+
+COMMENT ON COLUMN lcategory.lcode IS '외국어코드';
+
+COMMENT ON COLUMN lcategory.langname IS '외국어이름';
+
+ALTER TABLE lcategory
+	ADD
+		CONSTRAINT PK_lcategory
+		PRIMARY KEY (
+			lcode
+		);
+
+ALTER TABLE course
+	ADD
+		CONSTRAINT FK_member_TO_course
+		FOREIGN KEY (
+			mno
+		)
+		REFERENCES member (
+			mno
+		);
+
+ALTER TABLE jjim
+	ADD
+		CONSTRAINT FK_member_TO_jjim
+		FOREIGN KEY (
+			mno
+		)
+		REFERENCES member (
+			mno
+		);
+
+ALTER TABLE jjim
+	ADD
+		CONSTRAINT FK_course_TO_jjim
+		FOREIGN KEY (
+			cno
+		)
+		REFERENCES course (
+			cno
+		);
+
+ALTER TABLE review
+	ADD
+		CONSTRAINT FK_member_TO_review
+		FOREIGN KEY (
+			mno
+		)
+		REFERENCES member (
+			mno
+		);
+
+ALTER TABLE review
+	ADD
+		CONSTRAINT FK_course_TO_review
+		FOREIGN KEY (
+			cno
+		)
+		REFERENCES course (
+			cno
+		);
+
+ALTER TABLE question
+	ADD
+		CONSTRAINT FK_member_TO_question
+		FOREIGN KEY (
+			mno
+		)
+		REFERENCES member (
+			mno
+		);
+
+ALTER TABLE question
+	ADD
+		CONSTRAINT FK_course_TO_question
+		FOREIGN KEY (
+			cno
+		)
+		REFERENCES course (
+			cno
+		);
+
+ALTER TABLE infoadd
+	ADD
+		CONSTRAINT FK_member_TO_infoadd
+		FOREIGN KEY (
+			mno
+		)
+		REFERENCES member (
+			mno
+		);
+
+ALTER TABLE linterested
+	ADD
+		CONSTRAINT FK_member_TO_linterested
+		FOREIGN KEY (
+			mno
+		)
+		REFERENCES member (
+			mno
+		);
+
+ALTER TABLE linterested
+	ADD
+		CONSTRAINT FK_lcategory_TO_linterested
+		FOREIGN KEY (
+			lcode
+		)
+		REFERENCES lcategory (
+			lcode
+		);
+
+ALTER TABLE lavailable
+	ADD
+		CONSTRAINT FK_infoadd_TO_lavailable
+		FOREIGN KEY (
+			mno
+		)
+		REFERENCES infoadd (
+			mno
+		);
+
+ALTER TABLE lavailable
+	ADD
+		CONSTRAINT FK_lcategory_TO_lavailable
+		FOREIGN KEY (
+			lcode
+		)
+		REFERENCES lcategory (
+			lcode
+		);
+
+ALTER TABLE langtest
+	ADD
+		CONSTRAINT FK_infoadd_TO_langtest
+		FOREIGN KEY (
+			mno
+		)
+		REFERENCES infoadd (
+			mno
+		);
+
+ALTER TABLE payment
+	ADD
+		CONSTRAINT FK_course_TO_payment
+		FOREIGN KEY (
+			cno
+		)
+		REFERENCES course (
+			cno
+		);
+
+ALTER TABLE payment
+	ADD
+		CONSTRAINT FK_member_TO_payment
+		FOREIGN KEY (
+			mno
+		)
+		REFERENCES member (
+			mno
+		);
+
+ALTER TABLE answer
+	ADD
+		CONSTRAINT FK_member_TO_answer
+		FOREIGN KEY (
+			mno
+		)
+		REFERENCES member (
+			mno
+		);
+
+ALTER TABLE answer
+	ADD
+		CONSTRAINT FK_question_TO_answer
+		FOREIGN KEY (
+			qno
+		)
+		REFERENCES question (
+			qno
+		);

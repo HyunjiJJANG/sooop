@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.jhta.soop.dao.TaskFavoriteDAO">
+	<select id="selectOneFav" parameterType="TaskMemberNo" resultType="int">
+		SELECT COUNT(*)
+		FROM task_favorite
+		WHERE task_no = #{task_no} and member_no = #{member_no}
+	</select>
+	<insert id="insertFav" parameterType="TaskMemberNo">
+		INSERT INTO task_favorite
+		VALUES (#{task_no}, #{member_no})
+	</insert>
+	<delete id="deleteFav" parameterType="TaskMemberNo">
+		DELETE FROM task_favorite
+		WHERE task_no = #{task_no} and member_no = #{member_no}
+	</delete>
+</mapper>

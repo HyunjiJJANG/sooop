@@ -1,0 +1,27 @@
+ SELECT c.cpurpose, c.ctype, c.cnumberofpeople, c.clang, ifa.age, ifa.gender, c.cloc, c.cschedule 
+		 FROM infoadd ifa, member m, course c 
+		 WHERE m.mno = ifa.mno 
+		 AND m.mno = c.mno 
+		 AND c.cpurpose = ? 
+		 AND c.ctype = ? 
+		 AND (case when c.cnumberofpeople = 1 then '1' else '2' end) = ? 
+		 AND c.clang = ? 
+		 AND ifa.age = ? 
+		 AND ifa.gender = ? 
+		 AND c.cloc = ? 
+		 AND c.cschedule = ? 
+
+
+
+ SELECT c.cpurpose, c.ctype, c.cnumberofpeople, c.clang, ifa.age, ifa.gender, c.cloc, c.cschedule, c.cno
+		 FROM infoadd ifa, member m, course c 
+		 WHERE m.mno = ifa.mno 
+		 AND m.mno = c.mno 
+		 AND c.cpurpose = '회화' 
+		 AND c.ctype = '대면'
+		 AND (case when c.cnumberofpeople = 1 then '1' else '2' end) = 2
+		 AND c.clang = '중국어'
+		 AND ifa.age = '20'
+		 AND ifa.gender = '남' 
+		 AND c.cloc = '강북구' 
+		 AND c.cschedule = '평일오전';

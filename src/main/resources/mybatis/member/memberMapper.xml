@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.jhta.soop.dao.MemberDAO">
+
+ 
+	<select id="selectOneByName" parameterType="int" resultType="String">
+		SELECT name
+		FROM member
+		WHERE member_no = #{member_no}
+	</select>
+	
+	<select id="selectMemberByMemberNo" parameterType="int" resultType="String">
+		SELECT member_no
+		FROM member
+		WHERE email = #{email}
+	</select>
+	<select id="selectMnoByEmail" parameterType="String" resultType="int">
+		SELECT member_no
+		FROM member
+		WHERE email = #{email}
+	</select>
+	<!-- id 중복 체크 -->
+	<select id="selectOneByEmail" parameterType="String"
+		resultType="String">
+		SELECT email
+		FROM member
+		WHERE email = #{email}
+	</select>
+	
+	<!-- 회원가입 -->
+	<insert id="insertOne" parameterType="MemberDTO">
+		INSERT INTO member (email, password, name, profile_name, profile_path, enabled )
+		VALUES
+		(#{email},#{password},#{name},'profile.png','C:\Users\jhta\git\soop\soop\src\main\webapp\data\profile.png',1
+		)
+	</insert>
+	
+	
+	<!-- 소셜 회원가입 -->
+	
+	<insert id="oAuth2UserinsertOne" parameterType="MemberDTO">
+		INSERT INTO member (email, password, name, profile_name, profile_path, enabled )
+		VALUES
+		(#{email},#{password},#{name},'profile.png','C:\Users\jhta\git\soop\soop\src\main\webapp\data\profile.png',#{enabled})
+	</insert>
+	
+
+	<!-- 소셜 로그인시 중복 확인 후 가입을 위한 memper -->
+
+	<select id="selectMemberByEmail" parameterType="String"
+		resultType="MemberDTO">
+		SELECT member_no, email, password, name, profile_name, profile_path, enabled
+		FROM member
+		WHERE email = #{email}
+	</select>
+
+	<!-- member_role 추가를 위한 mapper -->
+	<insert id="insertRole" parameterType="String">
+		INSERT INTO member_role
+		VALUES (#{id}, 'ROLE_USER')
+	</insert>
+	
+	
+	<!-- 비밀번호 찾기 후 비밀번호 변경  -->
+	<update id="updateOne" parameterType="MemberDTO">
+	UPDATE member
+	SET password = #{password}
+	WHERE member_no = #{member_no}
+	</update>
+	
+	<!-- 마이페이지에서 이름 변경  -->
+	<update id="updateOneName" parameterType="MemberDTO">
+	UPDATE member
+	SET name = #{name}
+	WHERE email = #{email}
+	</update>
+	
+	
+	<!--마이페이지에서 프로필 사진 변경  -->
+	<update id="updateOneProfile" parameterType="memberDTO">
+	UPDATE member
+	SET profile_name = #{profile_name}, profile_path = #{profile_path}
+	WHERE email = #{email}
+	</update>
+	
+	
+	<select id="selectOne" parameterType="int" resultType="MemberDTO">
+	SELECT member_no, name, email, profile_name, profile_path, enabled
+	FROM member
+	WHERE member_no = #{member_no}
+	</select>
+</mapper>

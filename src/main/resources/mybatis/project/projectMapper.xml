@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+   
+  
+<mapper namespace="kr.co.jhta.soop.dao.ProjectDAO">
+
+	<select id="selectOne" parameterType="int" resultType="kr.co.jhta.soop.dto.ProjectDTO">
+		SELECT *
+  		FROM project
+  		WHERE project_no = #{project_no}
+	</select>
+
+	<select id="selectOneEndDate" parameterType="int" resultType="String">
+		SELECT project_end_date
+		FROM project
+		WHERE project_no = #{project_no}
+	</select>
+
+	<insert id="insertOne" parameterType="kr.co.jhta.soop.dto.ProjectDTO">
+		INSERT INTO project (project_title, project_description, project_start_date, project_end_Date, project_status, color)
+		VALUES (#{project_title}, #{project_description}, #{project_start_date}, #{project_end_Date}, 0, "#1ABC9C")
+	</insert>
+
+<select id="selectAll" resultType="kr.co.jhta.soop.dto.ProjectDTO">
+	  	SELECT 	project_no,
+	  		 	project_title,  		 	
+	  		 	project_description,
+	  		 	project_start_date,
+	  		 	project_end_date,
+	  		 	project_status,
+	  		 	color 	
+	  	FROM project  	
+  	</select>
+  	
+</mapper>

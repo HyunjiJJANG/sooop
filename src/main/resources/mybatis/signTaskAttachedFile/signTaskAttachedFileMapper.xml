@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="kr.co.jhta.soop.dao.SignTaskAttachedFileDAO">
+	
+	<select id="selectAll" resultType="kr.co.jhta.soop.dto.SignTaskAttachedFileDTO">
+		SELECT s.sign_no, t.task_no, s.member_no, s.sign_step, s.sign_approver, s.sign_status, s.sign_date, t.project_no, t.member_no, t.task_title, t.task_register_date, t.task_content, t.task_status,  t.task_start_date, t.task_end_date,
+		 f.file_no, f.file_type, f.file_name, f.file_path, f.file_register_date
+		FROM task t
+		    JOIN attached_file f ON t.task_no = f.task_no
+		    JOIN sign s ON t.task_no = s.task_no
+		ORDER BY t.task_no ASC
+	</select>
+	
+	<select id="selectOne" resultType="kr.co.jhta.soop.dto.SignTaskAttachedFileDTO" parameterType="int">
+		SELECT s.sign_no, t.task_no, s.member_no, s.sign_step, s.sign_approver, s.sign_status, s.sign_date, t.project_no, t.member_no, t.task_title, t.task_register_date, t.task_content, t.task_status,  t.task_start_date, t.task_end_date,
+		 f.file_no, f.file_type, f.file_name, f.file_path, f.file_register_date
+		FROM task t
+		    JOIN attached_file f ON t.task_no = f.task_no
+		    JOIN sign s ON t.task_no = s.task_no
+		WHERE t.task_no = #{task_no}
+	</select>
+
+	<insert id="insertTask" parameterType="kr.co.jhta.soop.dto.SignTaskAttachedFileDTO" useGeneratedKeys="true" keyProperty="task_no">
+	    INSERT INTO task(project_no, member_no, task_title, task_register_date, task_content, task_status, task_start_date, task_end_date)
+	    VALUES (#{project_no}, #{member_no}, #{task_title}, DATE_ADD(NOW(), INTERVAL 9 HOUR), #{task_content}, #{task_status}, #{task_start_date}, #{task_end_date})
+	</insert>
+	
+	<insert id="insertSign" parameterType="kr.co.jhta.soop.dto.SignTaskAttachedFileDTO">
+	    <!-- Insert into sign table -->
+	    INSERT INTO sign(task_no, member_no, sign_step, sign_approver, sign_status, sign_date)
+	    VALUES (#{task_no}, #{sign_member_no}, #{sign_step}, #{sign_approver}, #{sign_status}, DATE_ADD(NOW(), INTERVAL 9 HOUR))
+	</insert>
+	
+	<insert id="insertAttachedFile" parameterType="kr.co.jhta.soop.dto.SignTaskAttachedFileDTO">
+	    <!-- Insert into attached_file table -->
+	    INSERT INTO attached_file(file_no, task_no, file_type, file_name, file_path, file_register_date)
+	    VALUES (#{file_no}, #{task_no}, #{file_type}, #{file_name}, #{file_path}, #{file_register_date})
+	</insert>
+	
+	<update id="updateTask" parameterType="kr.co.jhta.soop.dto.SignTaskAttachedFileDTO">
+		UPDATE task
+		SET task_title = #{task_title}, task_register_date = DATE_ADD(NOW(), INTERVAL 9 HOUR), task_content = #{task_content}, task_status = #{task_status}, task_start_date = #{task_start_date}, task_end_date = #{task_end_date}
+		WHERE task_no = #{task_no}
+	</update>
+	
+	<update id="updateSign" parameterType="kr.co.jhta.soop.dto.SignTaskAttachedFileDTO">
+		UPDATE sign
+		SET member_no = #{sign_member_no}, sign_step = #{sign_step}, sign_approver = #{sign_approver}, sign_status = #{sign_status}, sign_date = DATE_ADD(NOW(), INTERVAL 9 HOUR) 
+		WHERE task_no = #{task_no}
+	</update>
+	
+	<update id="updateAttachedfile" parameterType="kr.co.jhta.soop.dto.SignTaskAttachedFileDTO">
+		UPDATE attached_file
+		SET file_type = #{file_type}, file_name = #{file_name}, file_path = #{file_path}, file_register_date = DATE_ADD(NOW(), INTERVAL 9 HOUR) 
+		WHERE file_no = #{file_no}
+	</update>
+
+
+</mapper>

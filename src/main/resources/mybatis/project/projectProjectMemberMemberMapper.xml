@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+
+
+<mapper namespace="kr.co.jhta.soop.dao.ProjectProjectMemberMemberDAO">
+
+
+
+	<select id="selectRecentProject" resultType="int">
+		SELECT p.project_no
+		FROM project p
+		ORDER BY p.project_no DESC
+		LIMIT 1
+	</select>
+	
+
+	<select id="selectAllProjectTitle" parameterType="int" resultType="kr.co.jhta.soop.dto.ProjectProjectMemberMemberDTO">
+		SELECT p.project_no, p.project_title, p.project_start_date, p.project_end_date, p.project_status, m.member_no, m.name
+		FROM project p
+		INNER JOIN project_member pm ON p.project_no = pm.project_no
+		INNER JOIN member m ON m.member_no = pm.member_no
+		WHERE m.member_no = #{member_no}
+	</select>
+
+	<select id="selectAllProjectMember" parameterType="int" resultType="kr.co.jhta.soop.dto.ProjectProjectMemberMemberDTO">
+		SELECT p.project_no, p.project_status, pm.member_no, pm.member_position, m.name, m.profile_path, m.profile_name
+		FROM project p
+		JOIN project_member pm
+		ON p.project_no = pm.project_no
+		JOIN member m
+		ON m.member_no = pm.member_no
+		WHERE p.project_no = #{project_no}
+		ORDER BY pm.member_position ASC;
+	</select>
+	
+	<select id="selectAllProjectMemberByPno" parameterType="int" resultType="kr.co.jhta.soop.dto.ProjectProjectMemberMemberDTO">
+		SELECT name, profile_name, profile_path,
+			   member_position
+		FROM member m
+		INNER JOIN project_member pm ON pm.member_no = m.member_no
+		INNER JOIN project p ON p.project_no = pm.project_no
+		WHERE pm.project_no = #{project_no}
+	</select>
+
+</mapper>

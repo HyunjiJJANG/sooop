@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+
+
+
+<mapper namespace="kr.co.jhta.soop.dao.TaskMemberFileDAO">
+
+	<select id="selectAllProjectFile" parameterType="int"
+		resultType="kr.co.jhta.soop.dto.TaskMemberFileDTO">
+		SELECT p.project_no, pm.member_no, t.task_title, a.task_no,
+		a.file_type, a.file_name, a.file_path, a.file_register_date
+		FROM
+		project p
+		JOIN project_member pm
+		ON p.project_no = pm.project_no
+		JOIN task t
+		ON p.project_no = t.project_no
+		JOIN attached_file a
+		ON t.task_no =
+		a.task_no
+		WHERE pm.member_no = #{member_no} AND a.file_path IS NOT NULL
+	</select>
+
+	<select id="selectProjectFile"
+		parameterType="kr.co.jhta.soop.dto.TaskMemberFileDTO"
+		resultType="kr.co.jhta.soop.dto.TaskMemberFileDTO">
+		SELECT p.project_no, pm.member_no, t.task_title, a.task_no,
+		a.file_type, a.file_name, a.file_path, a.file_register_date
+		FROM project p
+		JOIN project_member pm ON p.project_no = pm.project_no
+		JOIN task t ON p.project_no = t.project_no
+		JOIN attached_file a ON t.task_no = a.task_no
+		WHERE pm.member_no = #{member_no} AND p.project_no = #{project_no} AND a.file_path IS NOT NULL
+		ORDER BY a.task_no DESC;
+	</select>
+
+
+
+
+
+
+
+
+</mapper>

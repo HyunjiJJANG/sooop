@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+   
+<mapper namespace="kr.co.jhta.soop.dao.FeedTaskDAO">
+	<!-- 메인페이지 관심업무 task 리스트 불러오기 -->
+	<select id="selectAllTaskListByMno"
+		resultType="kr.co.jhta.soop.dto.FeedTaskDTO" parameterType="int">
+		SELECT p.project_no, p.project_title, t.task_title, tf.task_no, t.task_status
+		FROM task_favorite tf
+		JOIN task t
+		ON tf.task_no = t.task_no
+		JOIN project p
+		ON t.project_no = p.project_no
+		WHERE tf.member_no = #{member_no}
+	</select>
+	
+	<!-- task 리스트 불러오기 -->
+	<select id="selectAllTaskListByPno" resultType="kr.co.jhta.soop.dto.FeedTaskDTO" parameterType="kr.co.jhta.soop.util.Criteria">
+			SELECT t.task_no, t.task_title, t.task_register_date, t.task_status, m.name, m.profile_path, m.profile_name
+			FROM task t
+			INNER JOIN project p ON t.project_no = p.project_no
+			INNER JOIN member m ON t.member_no = m.member_no
+			WHERE t.project_no = #{project_no}
+			ORDER BY t.task_no DESC
+	        LIMIT #{pageStart}, #{perPageNum}
+	</select>
+    
+	<select id="totalCount" resultType="Integer">
+	        SELECT COUNT(*) AS row_count
+			FROM task t
+			INNER JOIN project p ON t.project_no = p.project_no
+			WHERE t.project_no = #{project_no};
+	</select>
+
+	<!-- task 상세 페이지 -->	
+	<select id="selectOneTaskDetailByTno" parameterType="int" resultType="kr.co.jhta.soop.dto.FeedTaskDTO">
+		SELECT t.task_no, t.task_title, t.task_register_date, t.task_status, t.task_start_date, t.task_end_date, t.task_content,
+         	   m.member_no, m.name, m.profile_name, m.profile_path,
+ 			   f.file_no, f.file_type, f.file_name, f.file_path        	   
+		FROM task t
+		INNER JOIN member m ON t.member_no = m.member_no
+		LEFT JOIN attached_file f ON t.task_no = f.task_no
+		WHERE t.task_no = #{task_no}
+	</select>
+	
+	<!-- feed 페이지 프로젝트 통계 첨부파일 개수 -->
+	<select id="countFile" parameterType="int" resultType="int">
+		SELECT COUNT(*)
+		FROM attached_file f
+		INNER JOIN task t ON f.task_no = t.task_no
+		INNER JOIN project p ON t.project_no = p.project_no
+		WHERE p.project_no = #{project_no}
+	</select>
+	
+
+</mapper>

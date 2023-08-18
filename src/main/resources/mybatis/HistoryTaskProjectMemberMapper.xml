@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+
+<mapper
+	namespace="kr.co.jhta.soop.dao.HistoryTaskProjectMemberDAO">
+
+	<!-- 페이징 처리를 위한 게시글 전체 수 -->
+	<select id="getTotal" resultType="int"
+		parameterType="HistoryTaskProjectMemberDTO">
+
+		SELECT COUNT(*) cnt
+		FROM history h
+		INNER JOIN task t ON
+		h.task_no = t.task_no
+		INNER JOIN project_member pm ON t.project_no =
+		pm.project_no
+		INNER JOIN project p ON t.project_no = p.project_no
+		WHERE
+		pm.member_no = #{member_no}
+	</select>
+
+
+
+	<!-- 히스토리 리스트 -->
+
+	<!-- 페이징 처리 히스토리 리스트 -->
+	<select id="selectAll"
+		parameterType="HistoryTaskProjectMemberDTO"
+		resultType="HistoryTaskProjectMemberDTO">
+		SELECT h.history_content, h.task_no,
+		h.history_register_date, p.project_title,
+		pm.member_no, p.project_no,
+		t.task_title, m.name as name
+		FROM history h
+		INNER JOIN task t ON
+		h.task_no = t.task_no
+		INNER JOIN project_member pm ON t.project_no =
+		pm.project_no
+		INNER JOIN project p ON t.project_no = p.project_no
+		INNER
+		JOIN member m ON t.member_no = m.member_no
+		WHERE pm.member_no =
+		#{member_no}
+		ORDER BY h.history_no DESC
+		LIMIT #{startNo}, #{endNo}
+
+
+
+	</select>
+
+	<!-- 히스토리에서 프로젝트별 찾기를 위한 프로젝트명 리스트 -->
+	<select id="selectAllbyMemberNo" parameterType="int"
+		resultType="HistoryTaskProjectMemberDTO">
+		SELECT p.project_title, p.project_no, pm.member_no
+		FROM
+		project p
+		INNER JOIN project_member pm ON p.project_no = pm.project_no
+		WHERE pm.member_no = #{member_no}
+	</select>
+
+
+	<!-- 히스토리 리스트중 프로젝트 명 선택시 보여줄 히스토리 목록 -->
+	<select id="getSearchList"
+		parameterType="HistoryTaskProjectMemberDTO"
+		resultType="HistoryTaskProjectMemberDTO">
+
+		SELECT h.history_content, h.task_no,
+		h.history_register_date,
+		p.project_title,
+		pm.member_no, p.project_no,
+		t.task_title, m.name as name
+		FROM history h
+		INNER JOIN task t ON
+		h.task_no = t.task_no
+		INNER JOIN project_member pm ON t.project_no =
+		pm.project_no
+		INNER JOIN project p ON t.project_no = p.project_no
+		INNER
+		JOIN member m ON t.member_no = m.member_no
+		WHERE pm.member_no =
+		#{member_no}
+		AND p.project_no = #{project_no}
+		ORDER BY h.history_no
+		DESC;
+
+	</select>
+
+	<!-- 히스토리 리스트중 프로젝트 전체보기 선택시 보여줄 히스토리 목록 -->
+
+	<select id="getSearchTotalList" parameterType="HistoryTaskProjectMemberDTO"
+		resultType="HistoryTaskProjectMemberDTO">
+		SELECT h.history_content, h.task_no, h.history_register_date,
+		p.project_title,
+		pm.member_no, p.project_no, t.task_title, m.name as name
+		FROM history h
+		INNER JOIN task t ON h.task_no = t.task_no
+		INNER JOIN project_member pm ON t.project_no = pm.project_no
+		INNER JOIN project p ON t.project_no = p.project_no
+		INNER JOIN member m ON t.member_no = m.member_no
+		WHERE pm.member_no = #{member_no}
+		ORDER BY h.history_no DESC
+
+	</select>
+	
+	
+	
+</mapper>

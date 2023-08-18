@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="kr.co.jhta.soop.dao.HistoryDAO">
+   
+  <!-- 히스토리 insert -->
+  <insert id="insertOne"  parameterType="HistoryDTO" >
+  INSERT INTO history(history_no,task_no,history_type, history_register_date,history_content)
+  VALUES(#{task_no},#{history_type},now(),#{history_content});
+  </insert>
+  
+  <update id="updateOne" parameterType="HistoryDTO">
+  UPDATE history
+  SET history_content = #{history_content}, history_register_date = now()
+  WHERE history_no = #{history_no}
+  </update>
+  <delete id="deleteOne" parameterType="HistoryDTO">
+  DELETE FROM history 
+  WHERE history_no = #{history_no}
+  </delete>
+  
+  </mapper>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+     
+<mapper namespace="kr.co.jhta.soop.dao.TaskDAO">
+	<select id="countTask" parameterType="int" resultType="int">
+		SELECT COUNT(*)
+		FROM task
+		WHERE project_no = #{project_no}
+	</select>
+	
+
+<!-- 	<select id="updateFavorite" parameterType="int">
+		UPDATE task
+		SET task_favorite = 1
+		WHERE task_no = #{task_no}
+	</select> -->
+
+<!-- 	<update id="deleteFavorite" parameterType="int">
+		UPDATE task
+		SET task_favorite = 0
+		WHERE task_no = #{task_no}
+	</update> -->
+	
+	
+	<insert id="insertOne" parameterType="kr.co.jhta.soop.dto.TaskDTO">
+		INSERT INTO task(project_no, member_no, task_title, task_register_date, task_content, task_status, task_start_date, task_end_date)
+ 		VALUES (#{project_no}, #{member_no}, #{task_title}, DATE_ADD(NOW(), INTERVAL 9 HOUR), #{task_content}, #{task_status}, #{task_start_date}, #{task_end_date}) 
+	</insert>
+	
+
+	<select id="selectOne" resultType="kr.co.jhta.soop.dto.TaskDTO" parameterType="int">
+		SELECT task_no, project_no, member_no, task_title, task_register_date, task_content, task_status, task_start_date, task_end_date
+		FROM task
+		WHERE task_no = #{task_no}
+	</select>
+
+	<update id="updateOne" parameterType="kr.co.jhta.soop.dto.TaskDTO">
+		UPDATE task
+		SET task_title = #{task_title}, task_register_date = DATE_ADD(NOW(), INTERVAL 9 HOUR), task_content = #{task_content}, task_status = #{task_status}, task_start_date = #{task_start_date}, task_end_date = #{task_end_date}
+		WHERE task_no = #{task_no}
+	</update>
+
+	<delete id="deleteOne" parameterType="int">
+		DELETE FROM task
+		WHERE task_no = #{task_no}
+	</delete>
+	
+
+</mapper>

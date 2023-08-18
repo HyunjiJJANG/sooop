@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+   
+<mapper namespace="kr.co.jhta.soop.dao.CommentDAO">
+   
+   
+    <select id="selectAllCommentByTno" parameterType="int" resultType="kr.co.jhta.soop.dto.CommentDTO">
+        SELECT c.comment_no, c.task_no, c.member_no, c.comment_content, c.comment_register_date, m.name, m.profile_path, m.profile_name
+        FROM comment c
+        INNER JOIN member m ON c.member_no = m.member_no
+		WHERE task_no = #{task_no}
+		ORDER BY c.comment_no DESC
+    </select>
+
+</mapper>

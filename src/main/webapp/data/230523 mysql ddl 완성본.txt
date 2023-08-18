@@ -1,0 +1,396 @@
+myslq문으로 변경한 sql문 
+
+CREATE TABLE member (
+	mno INT(5) NOT NULL AUTO_INCREMENT,
+	mtype TINYINT(1),
+	id VARCHAR(20),
+	pw VARCHAR(20),
+	name VARCHAR(20),
+	email VARCHAR(30)
+);
+
+COMMENT ON TABLE member IS '회원';
+
+COMMENT ON COLUMN member.mno IS '회원번호';
+
+COMMENT ON COLUMN member.mtype IS '회원분류';
+
+COMMENT ON COLUMN member.id IS '아이디';
+
+COMMENT ON COLUMN member.pw IS '패스워드';
+
+COMMENT ON COLUMN member.name IS '이름';
+
+COMMENT ON COLUMN member.email IS '이메일';
+
+ALTER TABLE member
+ADD CONSTRAINT PK_member PRIMARY KEY (mno);
+
+/* 클래스 */
+
+CREATE TABLE course (
+	cno INT(5) NOT NULL AUTO_INCREMENT,
+	cstatus TINYINT(1),
+	cwritedate DATE,
+	ctitle VARCHAR(50),
+	cpurpose VARCHAR(10),
+	ctype VARCHAR(10),
+	cloc VARCHAR(20),
+	cnumberofpeople TINYINT(1),
+	cschedule VARCHAR(20),
+	cintroduce TEXT,
+	cimage VARCHAR(100),
+	cfee INT(7),
+	ccount INT(2),
+	mno INT(5),
+	clang VARCHAR(10)
+);
+
+COMMENT ON TABLE course IS '클래스';
+
+COMMENT ON COLUMN course.cno IS '클래스번호';
+
+COMMENT ON COLUMN course.cstatus IS '모집상태';
+
+COMMENT ON COLUMN course.cwritedate IS '작성일시';
+
+COMMENT ON COLUMN course.ctitle IS '클래스제목';
+
+COMMENT ON COLUMN course.cpurpose IS '클래스목적';
+
+COMMENT ON COLUMN course.ctype IS '클래스방식(대면/비대면)';
+
+COMMENT ON COLUMN course.cloc IS '클래스위치';
+
+COMMENT ON COLUMN course.cnumberofpeople IS '클래스인원';
+
+COMMENT ON COLUMN course.cschedule IS '클래스일정';
+
+COMMENT ON COLUMN course.cintroduce IS '클래스상세소개';
+
+COMMENT ON COLUMN course.cimage IS '클래스소개이미지';
+
+COMMENT ON COLUMN course.cfee IS '회당수강료';
+
+COMMENT ON COLUMN course.ccount IS '클래스횟수';
+
+COMMENT ON COLUMN course.mno IS '회원번호';
+
+COMMENT ON COLUMN course.clang IS '클래스언어';
+
+ALTER TABLE course
+ADD CONSTRAINT PK_course PRIMARY KEY (cno);
+
+/* 찜 */
+
+CREATE TABLE jjim (
+	jno INT(5) NOT NULL AUTO_INCREMENT,
+	mno INT(5),
+	cno INT(5)
+);
+
+COMMENT ON TABLE jjim IS '찜';
+
+COMMENT ON COLUMN jjim.jno IS '찜번호';
+
+COMMENT ON COLUMN jjim.mno IS '회원번호';
+
+COMMENT ON COLUMN jjim.cno IS '클래스번호';
+
+ALTER TABLE jjim
+ADD CONSTRAINT PK_jjim PRIMARY KEY (jno);
+
+/* 리뷰 */
+
+CREATE TABLE review (
+	revno INT(5) NOT NULL AUTO_INCREMENT,
+	mno INT(5),
+	cno INT(5),
+	revcontent TEXT,
+	revwdate DATE,
+	rating TINYINT(1)
+);
+
+COMMENT ON TABLE review IS '리뷰';
+
+COMMENT ON COLUMN review.revno IS '리뷰번호';
+
+COMMENT ON COLUMN review.mno IS '회원번호';
+
+COMMENT ON COLUMN review.cno IS '클래스번호';
+
+COMMENT ON COLUMN review.revcontent IS '리뷰내용';
+
+COMMENT ON COLUMN review.revwdate IS '리뷰작성일시';
+
+COMMENT ON COLUMN review.rating IS '평점';
+
+ALTER TABLE review
+ADD CONSTRAINT PK_review PRIMARY KEY (revno);
+
+
+/* 튜터 회원 추가 정보 */
+
+CREATE TABLE infoadd (
+	mno INT(5) NOT NULL,
+	replang VARCHAR(20),
+	age VARCHAR(10),
+	gender VARCHAR(6),
+	dept VARCHAR(30),
+	school VARCHAR(20),
+	overseasexp VARCHAR(20),
+	tutorintroduce TEXT,
+	bankaccount VARCHAR(30),
+	picture VARCHAR(100)
+);
+
+COMMENT ON TABLE infoadd IS '튜터 회원 추가 정보';
+
+COMMENT ON COLUMN infoadd.mno IS '회원번호';
+
+COMMENT ON COLUMN infoadd.replang IS '대표외국어';
+
+COMMENT ON COLUMN infoadd.age IS '생년월일';
+
+COMMENT ON COLUMN infoadd.gender IS '성별';
+
+COMMENT ON COLUMN infoadd.dept IS '학교명';
+
+COMMENT ON COLUMN infoadd.school IS '최종학력';
+
+COMMENT ON COLUMN infoadd.overseasexp IS '해외거주경험';
+
+COMMENT ON COLUMN infoadd.tutorintroduce IS '자기소개';
+
+COMMENT ON COLUMN infoadd.bankaccount IS '계좌번호';
+
+COMMENT ON COLUMN infoadd.picture IS '사진';
+
+ALTER TABLE infoadd
+ADD CONSTRAINT PK_infoadd PRIMARY KEY (mno);
+
+/* 관심외국어 */
+
+CREATE TABLE linterested (
+	lino INT(5) NOT NULL AUTO_INCREMENT,
+	mno INT(5),
+	langname VARCHAR(20)
+);
+
+COMMENT ON TABLE linterested IS '관심외국어';
+
+COMMENT ON COLUMN linterested.lino IS '관심외국어번호';
+
+COMMENT ON COLUMN linterested.mno IS '회원번호';
+
+COMMENT ON COLUMN linterested.langname IS '외국어코드';
+
+ALTER TABLE linterested
+ADD CONSTRAINT PK_linterested PRIMARY KEY (lino);
+
+
+
+/* 활용 가능 외국어 */
+CREATE TABLE lavailable (
+	lano INT(5) NOT NULL AUTO_INCREMENT,
+	mno INT(5),
+	langname VARCHAR(20)
+);
+
+COMMENT ON TABLE lavailable IS '활용 가능 외국어';
+
+COMMENT ON COLUMN lavailable.lano IS '활용가능외국어번호';
+
+COMMENT ON COLUMN lavailable.mno IS '회원번호';
+
+COMMENT ON COLUMN lavailable.langname IS '외국어코드';
+
+ALTER TABLE lavailable
+ADD CONSTRAINT PK_lavailable PRIMARY KEY (lano);
+
+
+
+/* 공인외국어시험성적 */
+
+
+CREATE TABLE langtest (
+	ltno INT(5) NOT NULL AUTO_INCREMENT,
+	mno INT(5),
+	testname VARCHAR(20),
+	score VARCHAR(10),
+	authno VARCHAR(20)
+);
+
+COMMENT ON TABLE langtest IS '공인외국어시험성적';
+
+COMMENT ON COLUMN langtest.ltno IS '공인외국어시험성적번호';
+
+COMMENT ON COLUMN langtest.mno IS '회원번호';
+
+COMMENT ON COLUMN langtest.testname IS '시험명';
+
+COMMENT ON COLUMN langtest.score IS '점수/등급';
+
+COMMENT ON COLUMN langtest.authno IS '발급번호';
+
+ALTER TABLE langtest
+ADD CONSTRAINT PK_langtest PRIMARY KEY (ltno);
+
+
+/* 결제 */
+
+CREATE TABLE payment (
+	pno INT(5) NOT NULL AUTO_INCREMENT,
+	mno INT(5),
+	cno INT(5),
+	orderno VARCHAR(30),
+	price DECIMAL(7,2),
+	pauthno VARCHAR(30)
+);
+
+COMMENT ON TABLE payment IS '결제';
+
+COMMENT ON COLUMN payment.pno IS '결제번호';
+
+COMMENT ON COLUMN payment.mno IS '회원번호';
+
+COMMENT ON COLUMN payment.cno IS '클래스번호';
+
+COMMENT ON COLUMN payment.orderno IS '주문번호';
+
+COMMENT ON COLUMN payment.price IS '결제금액';
+
+COMMENT ON COLUMN payment.pauthno IS '결제승인번호';
+
+ALTER TABLE payment
+ADD CONSTRAINT PK_payment PRIMARY KEY (pno);
+
+
+
+
+
+ALTER TABLE course
+ADD CONSTRAINT FK_member_TO_course
+FOREIGN KEY (mno)
+REFERENCES member (mno);
+
+ALTER TABLE jjim
+ADD CONSTRAINT FK_member_TO_jjim
+FOREIGN KEY (mno)
+REFERENCES member (mno);
+
+
+ALTER TABLE jjim
+ADD CONSTRAINT FK_course_TO_jjim
+FOREIGN KEY (cno)
+REFERENCES course (cno);
+
+ALTER TABLE review
+ADD CONSTRAINT FK_member_TO_review
+FOREIGN KEY (mno)
+REFERENCES member (mno);
+
+ALTER TABLE review
+ADD CONSTRAINT FK_course_TO_review
+FOREIGN KEY (cno)
+REFERENCES course (cno);
+
+ALTER TABLE infoadd
+ADD CONSTRAINT FK_member_TO_infoadd
+FOREIGN KEY (mno)
+REFERENCES member (mno);
+
+ALTER TABLE linterested
+ADD CONSTRAINT FK_member_TO_linterested
+FOREIGN KEY (mno)
+REFERENCES member (mno);
+
+ALTER TABLE linterested
+ADD CONSTRAINT FK_lcategory_TO_linterested
+FOREIGN KEY (langname)
+REFERENCES lcategory (lcode);
+
+
+ALTER TABLE lavailable
+ADD CONSTRAINT FK_infoadd_TO_lavailable
+FOREIGN KEY (mno)
+REFERENCES infoadd (mno);
+
+ALTER TABLE lavailable
+ADD CONSTRAINT FK_lcategory_TO_lavailable
+FOREIGN KEY (langname)
+REFERENCES lcategory (lcode);
+
+ALTER TABLE langtest
+ADD CONSTRAINT FK_infoadd_TO_langtest
+FOREIGN KEY (mno)
+REFERENCES infoadd (mno);
+
+ALTER TABLE payment
+ADD CONSTRAINT FK_course_TO_payment
+FOREIGN KEY (cno)
+REFERENCES course (cno);
+
+
+ALTER TABLE payment
+ADD CONSTRAINT FK_member_TO_payment
+FOREIGN KEY (mno)
+REFERENCES member (mno);
+
+
+
+공지사항 faq 추가 
+
+CREATE TABLE notice (
+    ntno INT(5) AUTO_INCREMENT,
+    nttitle VARCHAR(100),
+    ntcontent LONGTEXT,
+    ntwdate DATE,
+    PRIMARY KEY (ntno)
+);
+
+COMMENT ON TABLE notice IS '공지사항';
+
+COMMENT ON COLUMN notice.ntno IS '공지사항번호';
+
+COMMENT ON COLUMN notice.nttitle IS '공지제목';
+
+COMMENT ON COLUMN notice.ntcontent IS '공지내용';
+
+COMMENT ON COLUMN notice.ntwdate IS '공지쓴날짜';
+
+//faq
+CREATE TABLE faq (
+    fno INT(5) NOT NULL AUTO_INCREMENT,
+    ftitle VARCHAR(100),
+    fcontent TEXT,
+    PRIMARY KEY (fno)
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

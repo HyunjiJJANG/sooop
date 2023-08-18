@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+   
+  
+  <mapper namespace="kr.co.jhta.soop.dao.MemberProjectProject_MemberDAO">
+  
+  	<!-- 로그인 시 내가 포함된 프로젝트 모두 보여주기 -->
+  	<select id="myproject_SelectAll" resultType="kr.co.jhta.soop.dto.MemberProjectProject_MemberDTO" parameterType="int">
+		SELECT *
+		FROM member m
+		JOIN project_member pm
+		ON m.member_no = pm.member_no
+		JOIN project p
+		ON pm.project_no = p.project_no
+		WHERE m.member_no = #{m.member_no}		
+		<!-- test 후 변경! 3 -->
+		<!-- WHERE m.member_no=#{m.member_no} -->	
+		<!-- test 확인경로 => http://localhost:8081/gantt?member_no=1 -->
+		
+  	</select>
+  	
+  </mapper>

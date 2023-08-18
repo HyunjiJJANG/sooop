@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+   
+  
+<mapper namespace="kr.co.jhta.soop.dao.ProjectTaskDAO">
+	<select id="cntTaskStatus0" parameterType="int" resultType="int">
+		SELECT COUNT(*)
+		FROM task t
+		INNER JOIN project p ON t.project_no = p.project_no
+		WHERE t.project_no = #{project_no} and t.task_status = 0
+	</select>
+	<select id="cntTaskStatus1" parameterType="int" resultType="int">
+		SELECT COUNT(*)
+		FROM task t
+		INNER JOIN project p ON t.project_no = p.project_no
+		WHERE t.project_no = #{project_no} and t.task_status = 1
+	</select>
+	<select id="cntTaskStatus2" parameterType="int" resultType="int">
+		SELECT COUNT(*)
+		FROM task t
+		INNER JOIN project p ON t.project_no = p.project_no
+		WHERE t.project_no = #{project_no} and t.task_status = 2
+	</select>
+	<select id="cntTaskStatus3" parameterType="int" resultType="int">
+		SELECT COUNT(*)
+		FROM task t
+		INNER JOIN project p ON t.project_no = p.project_no
+		WHERE t.project_no = #{project_no} and t.task_status = 3
+	</select>
+	<select id="cntTaskStatus4" parameterType="int" resultType="int">
+		SELECT COUNT(*)
+		FROM task t
+		INNER JOIN project p ON t.project_no = p.project_no
+		WHERE t.project_no = #{project_no} and t.task_status = 4
+	</select>
+</mapper>

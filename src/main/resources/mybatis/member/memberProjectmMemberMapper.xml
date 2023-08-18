@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+     
+<mapper namespace="kr.co.jhta.soop.dao.MemberProjectMemberDAO">
+
+
+	<select id="selectAllProjectByEmail" parameterType="String" resultType="int">
+		SELECT pm.project_no
+		FROM project_member pm
+		JOIN member m
+		ON m.member_no = pm.member_no
+		WHERE m.email = #{email}
+	</select>
+	
+	<!-- 주소록을 위한 프로젝트 멤버 리스트로 가져오기 -->
+
+	<select id="selectAll" resultType="MemberProjectMemberDTO"
+		parameterType="MemberProjectMemberDTO">
+
+		SELECT DISTINCT m.name, m.email, m.profile_path, m.profile_name
+		FROM
+		member m
+		JOIN project_member pm ON pm.member_no = m.member_no
+		WHERE
+		pm.project_no IN (
+		SELECT project_no
+		FROM project_member
+		WHERE member_no
+		= #{member_no}
+		) AND m.member_no != #{member_no}
+		AND pm.project_no =
+		#{project_no}
+		ORDER BY m.name
+
+	</select>
+	
+	<!-- 나의 모든 프로젝트의 모든 주소록 리스트 가져오기 -->
+	<select id="selectProjectAll" resultType="MemberProjectMemberDTO"
+		parameterType="MemberProjectMemberDTO" >
+		SELECT DISTINCT m.name, m.email, m.profile_path, m.profile_name
+		FROM
+		member m
+		JOIN project_member pm ON pm.member_no = m.member_no
+		WHERE
+		pm.project_no IN (
+		SELECT project_no
+		FROM project_member
+		WHERE member_no
+		= #{member_no}
+		) AND m.member_no != #{member_no}
+		ORDER BY m.name
+		</select>
+
+	<select id="selectOne" resultType="MemberProjectMemberDTO"
+		parameterType="int">
+
+		SELECT *
+		FROM member
+		where member_no = #{member_no}
+
+
+	</select>
+
+	<select id="selectSearchList"
+		parameterType="MemberProjectMemberDTO"
+		resultType="MemberProjectMemberDTO">
+		
+			SELECT DISTINCT m.name, m.email, m.profile_path, m.profile_name
+			FROM member m
+			JOIN project_member pm ON pm.member_no = m.member_no
+			WHERE pm.project_no IN (
+			SELECT project_no
+			FROM project_member
+			WHERE member_no = #{member_no}
+			) AND m.member_no != #{member_no}
+			AND pm.project_no = #{project_no}
+			AND m.name LIKE CONCAT('%', #{search_name}, '%')
+			ORDER BY m.name
+		
+	</select>
+</mapper>

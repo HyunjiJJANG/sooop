@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="kr.co.jhta.soop.dao.AttachedFileDAO">
+	
+	<insert id="insertOne" parameterType="kr.co.jhta.soop.dto.AttachedFileDTO">
+		INSERT INTO attached_file(file_no, task_no, file_type, file_name, file_path, file_register_date)
+ 		VALUES (#{file_no}, #{task_no}, #{file_type}, #{file_name}, #{file_path}, #{file_register_date})
+			<selectKey resultType="int" keyProperty="task_no" order="BEFORE">
+				SELECT LAST_INSERT_ID()
+			</selectKey> 
+	</insert>
+	
+	<select id="selectOne" resultType="kr.co.jhta.soop.dto.AttachedFileDTO" parameterType="int">
+		SELECT task_no, file_type, file_name, file_path, file_register_date
+		FROM attached_file
+		WHERE file_no = #{file_no}
+	</select>
+	
+	
+	<update id="updateOne" parameterType="kr.co.jhta.soop.dto.AttachedFileDTO">
+		UPDATE attached_file
+		SET task_no = #{task_no}, file_type = #{file_type}, file_name = #{file_name}, file_path = #{file_path}, file_register_date = #{file_register_date}
+		WHERE file_no = #{file_no}
+	</update>
+
+
+	<delete id="deleteOne" parameterType="int">
+		DELETE FROM attached_file
+		WHERE file_no = #{file_no}
+	</delete>
+	
+</mapper>

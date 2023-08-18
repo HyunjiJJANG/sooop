@@ -1,0 +1,121 @@
+
+task_no	project_no	member_no	task_title	task_register_date	task_content	task_status	task_start_date	task_end_date	file_name	file_no	file_type	file_path	file_register_date	sign_no	sign_approver	sign_status	sign_step
+2	1	1	ㅁㄴㅇㄹ	2023-08-14 13:04:08	ㅁㄴㅇㄹ	2	2023-08-12	2023-08-12		2	application/octet-stream	C:\Users\jhta\git\soop\soop\src\main\webapp\data\	2	금쪽이	1	1
+
+
+
+
+
+
+	@PostMapping("/update")
+	public String updateOk(@ModelAttribute TaskDTO taskdto, 
+			@ModelAttribute AttachedFileDTO filedto, 
+			@ModelAttribute SignTaskAttachedFileDTO SignTaskAttachedFiledto,
+			@RequestParam("task_status") int task_status, Model model,
+			HttpServletRequest req,
+			@RequestParam(name = "file", required = false) MultipartFile file,
+			@ModelAttribute UploadFile uploadfile,
+			@RequestParam(name="sign_member_no_up", required = false)int sign_member_no,
+			@RequestParam(name = "sign_approver_up", required=false) String sign_approver, // required=true 반드시 요청에 포함되도록
+			@RequestParam(name="sign_step_up", required=false)int sign_step) {
+		
+		
+		// ** task 수정 (update) **
+		
+//		int taskstatus = Integer.parseInt(task_status);
+//		SignTaskAttachedFiledto.setTask_status(taskstatus); // 파라미터로 넘겨온 task_status 값을 dto에 셋팅
+
+//		SignTaskAttachedFiledto.setTask_status(task_status); // 파라미터로 넘겨온 task_status 값을 dto에 셋팅
+//		signTaskAttachedFileService.updateTask(SignTaskAttachedFiledto);
+		
+		taskdto.setTask_status(task_status); // 파라미터로 넘겨온 task_status 값을 dto에 셋팅
+		taskService.updateOne(taskdto);
+
+		
+		
+		// ** 결재라인 수정 (update) **
+		
+		log.info("sign_member_no : "+sign_member_no);
+		log.info("sign_approver : "+sign_approver);
+		log.info("sign_step : "+sign_step);
+		
+//	    int signMemberNo = Integer.parseInt(sign_member_no);
+	    
+		// signtaskattachedfiledto의 sign_member_no의 값을 받아서 task.jsp의 수정 모달에 넘겨주기 위해(default값 설정)
+//		model.addAttribute("currentUserSignMemberNo", SignTaskAttachedFiledto.getSign_member_no());
+//		model.addAttribute("currentUserSignApprover", SignTaskAttachedFiledto.getSign_approver());
+//		model.addAttribute("currentUserSignStep", SignTaskAttachedFiledto.getSign_step());
+//		model.addAttribute("SignTaskAttachedFiledto", SignTaskAttachedFiledto);
+//		
+	    SignTaskAttachedFiledto.setSign_member_no(sign_member_no);
+	    SignTaskAttachedFiledto.setSign_approver(sign_approver);
+	    SignTaskAttachedFiledto.setSign_step(sign_step);
+	    SignTaskAttachedFiledto.setSign_status(1);
+	    
+		log.info("찍기 : " + SignTaskAttachedFiledto.getSign_approver());
+		
+		signTaskAttachedFileService.updateSign(SignTaskAttachedFiledto);
+		
+		
+		
+		// ** 첨부파일 수정 (update) **
+		
+		// 파일은 어디에 저장  /data <== (현재 임시 파일은 properties에 c:\\temp\\data 로 지정됨)
+				// 서버에 저장할 실제 디렉토리 경로 구하기
+				HttpSession session = req.getSession(); // http 객체 얻어오기
+				ServletContext application = session.getServletContext(); // session으로부터 servlet context 얻어오기
+				
+				String filePath = application.getRealPath("/data"); // 데이터의 실제 경로
+				log.info("파일이 저장될 실제 경로 : {} " + filePath); // 해당 경로로 탐색기에서 테스트 했을 때, data 폴더에 밀어넣은 이미지 나옴
+				
+				// 매개변수로 전달 받은 파일 객체
+				/*
+				 * log.info(("file : {} " + file)); log.info(("file.getFile() : {} " +
+				 * file.getOriginalFilename()));
+				 */
+				
+				
+				// 파일명 받아서 Filedto에 저장
+				log.info("파일명 : {} ",  file.getOriginalFilename()); // 파일명 받기 (=> 경로는 설정 파일에서 저장)
+				filedto.setFile_name(file.getOriginalFilename());
+				
+				// 파일 객체로 만들기 => 파일 경로에 / 와 파일 이름을 붙여서 객체로 만듦
+				// 저장될 경로 + "/" + 파일명
+				File f = new File(filePath + "/" + file.getOriginalFilename()); 
+				// 임시 경로에 보관 중인 파일을 실제 위치에 저장
+				try {
+					file.transferTo(f);
+				} catch (IllegalStateException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+				// 파일 타입 받아서 Filedto에 저장
+				log.info("파일 타입 : {} " , file.getContentType());
+				filedto.setFile_type(file.getContentType());
+				
+				// 오늘 날짜 담아서 Filedto에 저장
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				// 현재날짜를받아옴
+				Date date = new Date();
+				String fileDate = sdf.format(date);
+				log.info("파일 날짜 : {} ", fileDate);
+				filedto.setFile_register_date(fileDate);
+				
+				// 파일 경로 받아서 Filedto에 저장
+				filedto.setFile_path(filePath + "\\" + file.getOriginalFilename());
+
+				// 파일 넘버를 task_no로 셋팅 (230728 11:18)
+				filedto.setFile_no(taskdto.getTask_no());
+				
+				log.debug("업데이트 쿼리 실행 전: {}", filedto);
+				attachedfileService.updateOne(filedto);
+				log.debug("업데이트 쿼리 실행 후: {}", filedto);
+		
+				
+		return "redirect:/soop/task";
+	}
+
+
+

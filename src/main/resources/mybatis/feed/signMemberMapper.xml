@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  
+<mapper namespace="kr.co.jhta.soop.dao.SignMemberDAO">
+	<select id="selectAllSignByTno" parameterType="int" resultType="kr.co.jhta.soop.dto.SignMemberDTO">
+		SELECT s.sign_step, s.sign_approver, s.sign_status, m.profile_path 
+		FROM sign s
+		INNER JOIN member m ON s.sign_approver = m.name
+		WHERE s.task_no = #{task_no}
+		ORDER BY s.sign_step ASC
+	</select>
+	
+	<select id="selectOne" parameterType="int" resultType="kr.co.jhta.soop.dto.SignMemberDTO">
+		SELECT s.sign_step, s.sign_approver, s.sign_status, m.profile_path, m.profile_name
+		FROM sign s
+		INNER JOIN member m ON s.sign_approver = m.name
+		WHERE s.task_no = #{task_no}
+	</select>
+	
+</mapper>
